@@ -136,7 +136,7 @@ src/
 
 ## 📄 License
 
-This project is developed for the Smart India Hackathon 2024 by Team Xerox.
+This project is developed for the Smart India Hackathon 2025 by Team Xerox.
 
 ## 🤝 Contributing
 
@@ -144,4 +144,4 @@ This is a prototype developed for the Smart India Hackathon. For production use,
 
 ---
 
-**Built with ❤️ by Team Xerox for Smart India Hackathon 2024**
+**Built with ❤️ by Team Xerox for Smart India Hackathon 2025**
