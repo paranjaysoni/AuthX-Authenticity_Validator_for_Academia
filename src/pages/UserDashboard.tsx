@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import PieChart from '../components/PieChart';
+import { Upload, Camera, FileText, Image, X, CheckCircle, AlertCircle } from 'lucide-react';
 
 const UserDashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -8,15 +9,72 @@ const UserDashboard: React.FC = () => {
   const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [verificationResults, setVerificationResults] = useState<any[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [uploadMethod, setUploadMethod] = useState<'file' | 'camera'>('file');
+  const [cameraActive, setCameraActive] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [stats, setStats] = useState({
     totalVerified: 0,
     totalFraud: 0,
     totalProcessed: 0
   });
 
+  // Camera functions
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' } 
+      });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        streamRef.current = stream;
+      }
+      setCameraActive(true);
+    } catch (error) {
+      alert('Unable to access camera. Please check permissions.');
+      console.error('Camera error:', error);
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setCameraActive(false);
+  };
+
+  const captureImage = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(videoRef.current, 0, 0);
+        const imageData = canvas.toDataURL('image/jpeg');
+        setCapturedImage(imageData);
+        stopCamera();
+        
+        // Convert data URL to File object
+        fetch(imageData)
+          .then(res => res.blob())
+          .then(blob => {
+            const file = new File([blob], `captured-certificate-${Date.now()}.jpg`, { type: 'image/jpeg' });
+            setUploadFiles(prev => [...prev, file]);
+          });
+      }
+    }
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setUploadFiles(prev => [...prev, ...files]);
+  };
+
+  const removeFile = (index: number) => {
+    setUploadFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const processCertificates = async () => {
@@ -46,6 +104,7 @@ const UserDashboard: React.FC = () => {
 
     setVerificationResults(prev => [...prev, ...results]);
     setUploadFiles([]);
+    setCapturedImage(null);
     setIsProcessing(false);
     
     // Update stats
@@ -75,6 +134,14 @@ const UserDashboard: React.FC = () => {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -143,7 +210,7 @@ const UserDashboard: React.FC = () => {
                         <p className="text-3xl font-bold">{stats.totalProcessed}</p>
                       </div>
                       <div className="bg-blue-400 bg-opacity-30 p-3 rounded-full">
-                        <span className="text-2xl">📊</span>
+                        <FileText className="w-6 h-6" />
                       </div>
                     </div>
                   </div>
@@ -157,7 +224,7 @@ const UserDashboard: React.FC = () => {
                         <p className="text-3xl font-bold">{stats.totalVerified}</p>
                       </div>
                       <div className="bg-green-400 bg-opacity-30 p-3 rounded-full">
-                        <span className="text-2xl">✅</span>
+                        <CheckCircle className="w-6 h-6" />
                       </div>
                     </div>
                   </div>
@@ -171,7 +238,7 @@ const UserDashboard: React.FC = () => {
                         <p className="text-3xl font-bold">{stats.totalFraud}</p>
                       </div>
                       <div className="bg-red-400 bg-opacity-30 p-3 rounded-full">
-                        <span className="text-2xl">🚨</span>
+                        <AlertCircle className="w-6 h-6" />
                       </div>
                     </div>
                   </div>
@@ -187,7 +254,7 @@ const UserDashboard: React.FC = () => {
                         </p>
                       </div>
                       <div className="bg-purple-400 bg-opacity-30 p-3 rounded-full">
-                        <span className="text-2xl">📈</span>
+                        <Upload className="w-6 h-6" />
                       </div>
                     </div>
                   </div>
@@ -198,7 +265,7 @@ const UserDashboard: React.FC = () => {
               <div className="bg-white shadow-xl rounded-xl overflow-hidden">
                 <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <span className="mr-2">📋</span>
+                    <FileText className="w-5 h-5 mr-2" />
                     Recent Verification Results
                   </h3>
                 </div>
@@ -229,7 +296,7 @@ const UserDashboard: React.FC = () => {
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <div className="text-gray-400 text-6xl mb-4">📄</div>
+                      <FileText className="mx-auto h-16 w-16 text-gray-400 mb-4" />
                       <p className="text-gray-500 text-lg">No certificates processed yet</p>
                       <p className="text-gray-400 text-sm">Upload certificates to get started</p>
                     </div>
@@ -241,81 +308,207 @@ const UserDashboard: React.FC = () => {
 
           {activeTab === 'upload' && (
             <div className="space-y-6">
-              {/* Upload Section */}
+              {/* Upload Method Selection */}
               <div className="bg-white shadow-xl rounded-xl overflow-hidden">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <span className="mr-2">📁</span>
-                    Bulk Certificate Upload & Verification
+                    <Upload className="w-5 h-5 mr-2" />
+                    Upload Method
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">Upload multiple certificates for instant verification</p>
+                  <p className="text-sm text-gray-600 mt-1">Choose how you want to upload certificates</p>
                 </div>
                 <div className="p-6">
-                  <div className="border-2 border-dashed border-blue-300 rounded-xl p-8 hover:border-blue-400 transition-colors">
-                    <div className="text-center">
-                      <div className="mx-auto h-16 w-16 text-blue-400 mb-4">
-                        <svg className="h-16 w-16" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                          <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                      <div>
-                        <label htmlFor="bulk-upload" className="cursor-pointer">
-                          <span className="text-lg font-medium text-gray-900 block">
-                            Drop your certificates here, or click to browse
-                          </span>
-                          <span className="text-sm text-gray-500 mt-1 block">
-                            Supports PDF, PNG, JPG files up to 10MB each
-                          </span>
-                        </label>
-                        <input
-                          id="bulk-upload"
-                          type="file"
-                          accept=".pdf,.png,.jpg,.jpeg"
-                          multiple
-                          onChange={handleFileUpload}
-                          className="sr-only"
-                        />
-                      </div>
-                    </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <button
+                      onClick={() => setUploadMethod('file')}
+                      className={`p-6 border-2 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-3 ${
+                        uploadMethod === 'file'
+                          ? 'border-blue-500 bg-blue-50 shadow-md'
+                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <FileText className={`w-12 h-12 ${uploadMethod === 'file' ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <span className={`font-medium ${uploadMethod === 'file' ? 'text-blue-700' : 'text-gray-700'}`}>
+                        File Upload
+                      </span>
+                      <span className="text-sm text-gray-500 text-center">
+                        Upload PDF, PNG, JPG files from your device
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={() => setUploadMethod('camera')}
+                      className={`p-6 border-2 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-3 ${
+                        uploadMethod === 'camera'
+                          ? 'border-blue-500 bg-blue-50 shadow-md'
+                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Camera className={`w-12 h-12 ${uploadMethod === 'camera' ? 'text-blue-600' : 'text-gray-400'}`} />
+                      <span className={`font-medium ${uploadMethod === 'camera' ? 'text-blue-700' : 'text-gray-700'}`}>
+                        Camera Capture
+                      </span>
+                      <span className="text-sm text-gray-500 text-center">
+                        Use your camera to capture certificate photos
+                      </span>
+                    </button>
                   </div>
 
+                  {/* File Upload Section */}
+                  {uploadMethod === 'file' && (
+                    <div className="border-2 border-dashed border-blue-300 rounded-xl p-8 hover:border-blue-400 transition-colors">
+                      <div className="text-center">
+                        <FileText className="mx-auto h-16 w-16 text-blue-400 mb-4" />
+                        <div>
+                          <label htmlFor="bulk-upload" className="cursor-pointer">
+                            <span className="text-lg font-medium text-gray-900 block">
+                              Drop your certificates here, or click to browse
+                            </span>
+                            <span className="text-sm text-gray-500 mt-1 block">
+                              Supports PDF, PNG, JPG files up to 10MB each
+                            </span>
+                          </label>
+                          <input
+                            id="bulk-upload"
+                            type="file"
+                            accept=".pdf,.png,.jpg,.jpeg"
+                            multiple
+                            onChange={handleFileUpload}
+                            className="sr-only"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Camera Capture Section */}
+                  {uploadMethod === 'camera' && (
+                    <div className="space-y-4">
+                      {!cameraActive && !capturedImage && (
+                        <div className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center">
+                          <Camera className="mx-auto h-16 w-16 text-blue-400 mb-4" />
+                          <h4 className="text-lg font-medium text-gray-900 mb-2">Capture Certificate</h4>
+                          <p className="text-sm text-gray-500 mb-4">Use your camera to take a photo of the certificate</p>
+                          <button
+                            onClick={startCamera}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
+                          >
+                            <Camera className="w-5 h-5" />
+                            <span>Start Camera</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {cameraActive && (
+                        <div className="border-2 border-blue-300 rounded-xl overflow-hidden">
+                          <div className="bg-gray-900 p-4 flex justify-between items-center">
+                            <span className="text-white text-sm">Camera Active - Position certificate in frame</span>
+                            <button
+                              onClick={stopCamera}
+                              className="text-white hover:text-gray-300"
+                            >
+                              <X className="w-5 h-5" />
+                            </button>
+                          </div>
+                          <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            className="w-full h-64 object-cover"
+                          />
+                          <div className="p-4 bg-gray-50 border-t">
+                            <button
+                              onClick={captureImage}
+                              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                            >
+                              <Camera className="w-5 h-5" />
+                              <span>Capture Certificate</span>
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {capturedImage && (
+                        <div className="border-2 border-green-300 rounded-xl overflow-hidden">
+                          <div className="bg-green-50 p-4 flex justify-between items-center">
+                            <span className="text-green-800 text-sm font-medium">Certificate Captured Successfully</span>
+                            <button
+                              onClick={() => {
+                                setCapturedImage(null);
+                                setUploadFiles(prev => prev.filter(file => !file.name.startsWith('captured-certificate')));
+                              }}
+                              className="text-green-600 hover:text-green-800"
+                            >
+                              <X className="w-5 h-5" />
+                            </button>
+                          </div>
+                          <img
+                            src={capturedImage}
+                            alt="Captured certificate"
+                            className="w-full h-64 object-contain bg-gray-100"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Selected Files Preview */}
                   {uploadFiles.length > 0 && (
                     <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-medium text-blue-900">Selected Files ({uploadFiles.length})</h4>
+                        <h4 className="font-medium text-blue-900 flex items-center">
+                          <FileText className="w-4 h-4 mr-2" />
+                          Selected Files ({uploadFiles.length})
+                        </h4>
                         <button
-                          onClick={() => setUploadFiles([])}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          onClick={() => {
+                            setUploadFiles([]);
+                            setCapturedImage(null);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
                         >
+                          <X className="w-4 h-4 mr-1" />
                           Clear All
                         </button>
                       </div>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
                         {uploadFiles.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-blue-500">📄</span>
-                              <span className="text-sm font-medium text-gray-900">{file.name}</span>
+                          <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                            <div className="flex items-center space-x-3">
+                              {file.type.startsWith('image/') ? (
+                                <Image className="w-5 h-5 text-blue-500" />
+                              ) : (
+                                <FileText className="w-5 h-5 text-blue-500" />
+                              )}
+                              <div>
+                                <span className="text-sm font-medium text-gray-900 block">{file.name}</span>
+                                <span className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                              </div>
                             </div>
-                            <span className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                            <button
+                              onClick={() => removeFile(index)}
+                              className="text-gray-400 hover:text-red-500 transition-colors"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 flex space-x-3">
+                      <div className="mt-4">
                         <button 
                           onClick={processCertificates}
                           disabled={isProcessing}
-                          className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
                         >
                           {isProcessing ? (
                             <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                              <span>Processing...</span>
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                              <span>Processing Certificates...</span>
                             </>
                           ) : (
                             <>
-                              <span>🔍</span>
-                              <span>Verify Certificates</span>
+                              <CheckCircle className="w-5 h-5" />
+                              <span>Verify {uploadFiles.length} Certificate{uploadFiles.length !== 1 ? 's' : ''}</span>
                             </>
                           )}
                         </button>
@@ -330,7 +523,7 @@ const UserDashboard: React.FC = () => {
                 <div className="bg-white shadow-xl rounded-xl overflow-hidden">
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                      <span className="mr-2">📊</span>
+                      <CheckCircle className="w-5 h-5 mr-2" />
                       Verification Results
                     </h3>
                   </div>
@@ -359,12 +552,22 @@ const UserDashboard: React.FC = () => {
                                 {result.degree}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                                   result.status === 'verified' 
                                     ? 'bg-green-100 text-green-800' 
                                     : 'bg-red-100 text-red-800'
                                 }`}>
-                                  {result.status === 'verified' ? '✅ Verified' : '🚨 Fraud'}
+                                  {result.status === 'verified' ? (
+                                    <>
+                                      <CheckCircle className="w-3 h-3 mr-1" />
+                                      Verified
+                                    </>
+                                  ) : (
+                                    <>
+                                      <AlertCircle className="w-3 h-3 mr-1" />
+                                      Fraud
+                                    </>
+                                  )}
                                 </span>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -395,7 +598,7 @@ const UserDashboard: React.FC = () => {
                 
                 <div className="bg-white shadow-xl rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    <span className="mr-2">📊</span>
+                    <FileText className="w-5 h-5 mr-2" />
                     Summary Statistics
                   </h3>
                   <div className="space-y-4">
@@ -423,7 +626,7 @@ const UserDashboard: React.FC = () => {
               <div className="bg-white shadow-xl rounded-xl overflow-hidden">
                 <div className="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-4 border-b">
                   <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                    <span className="mr-2">📈</span>
+                    <Upload className="w-5 h-5 mr-2" />
                     Download Verification Report
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">Export detailed verification data and analytics</p>
@@ -438,7 +641,7 @@ const UserDashboard: React.FC = () => {
                       onClick={downloadReport}
                       className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2"
                     >
-                      <span>📥</span>
+                      <Upload className="w-5 h-5" />
                       <span>Download Report</span>
                     </button>
                   </div>

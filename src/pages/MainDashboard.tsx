@@ -390,7 +390,7 @@ const MainDashboard: React.FC = () => {
             
             <div className="mt-12 pt-8 border-t border-gray-800">
               <p className="text-gray-500 text-sm">
-                © 2024 AuthX. Built with excellence for the Smart India Hackathon.
+                © 2025 AuthX. Built with excellence for the Smart India Hackathon.
               </p>
             </div>
           </div>

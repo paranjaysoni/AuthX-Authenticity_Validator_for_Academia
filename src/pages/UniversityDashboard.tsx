@@ -8,6 +8,7 @@ const UniversityDashboard: React.FC = () => {
   const [bulkUploadFile, setBulkUploadFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [studentData, setStudentData] = useState<any[]>([]);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [stats, setStats] = useState({
     totalStudents: 2847,
     certificatesIssued: 1856,
@@ -53,11 +54,63 @@ const UniversityDashboard: React.FC = () => {
         certificatesIssued: prev.certificatesIssued + newStudents.filter(s => s.status === 'verified').length,
         pendingRequests: prev.pendingRequests + newStudents.filter(s => s.status === 'pending').length
       }));
+
+      // Show success popup
+      setShowSuccessPopup(true);
     }
+  };
+
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all duration-300 scale-100">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Data Uploaded Successfully!
+              </h3>
+              
+              <div className="text-gray-600 mb-2 space-y-3 text-left">
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Student data has been processed successfully
+                </p>
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  {studentData.length} student records added to the system
+                </p>
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Certificates are being generated automatically
+                </p>
+              </div>
+              
+              <p className="text-sm text-gray-500 mt-4 mb-6">
+                The data is now available in the Data Management section
+              </p>
+              
+              <button
+                onClick={closeSuccessPopup}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Continue to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -264,7 +317,7 @@ const UniversityDashboard: React.FC = () => {
                             Drop your CSV file here, or click to browse
                           </span>
                           <span className="text-sm text-gray-500 mt-1 block">
-                            CSV format with student data (Name, Email, Degree, Graduation Year)
+                            CSV format with student data (Name, Email, Degree, Graduation Year, etc.)
                           </span>
                         </label>
                         <input
@@ -316,21 +369,6 @@ const UniversityDashboard: React.FC = () => {
                       </div>
                     </div>
                   )}
-
-                  {/* CSV Format Guide */}
-                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                      <span className="mr-2">📋</span>
-                      CSV Format Requirements
-                    </h4>
-                    <div className="bg-white rounded-lg p-4 border">
-                      <pre className="text-sm text-gray-600">
-{`Name,Email,Degree,Graduation Year
-John Doe,john@university.edu,Computer Science,2023
-Jane Smith,jane@university.edu,Business Administration,2023`}
-                      </pre>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

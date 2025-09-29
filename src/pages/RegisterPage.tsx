@@ -15,6 +15,7 @@ const RegisterPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showAdminPopup, setShowAdminPopup] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -49,7 +50,15 @@ const RegisterPage: React.FC = () => {
     setIsLoading(true);
     try {
       await register(formData);
-      navigate('/login');
+      
+      // Different behavior based on user type
+      if (formData.userType === 'university') {
+        // Show admin registration popup
+        setShowAdminPopup(true);
+      } else {
+        // Regular user - redirect to login
+        navigate('/login');
+      }
     } catch (error) {
       setErrors(['Registration failed. Please try again.']);
     } finally {
@@ -57,8 +66,62 @@ const RegisterPage: React.FC = () => {
     }
   };
 
+  const handleAdminPopupClose = () => {
+    setShowAdminPopup(false);
+    navigate('/'); // Redirect to home page
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Admin Registration Success Popup */}
+      {showAdminPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 transform transition-all duration-300 scale-100">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
+                <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Registration Submitted Successfully!
+              </h3>
+              
+              <div className="text-gray-600 mb-2 space-y-3 text-left">
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Thanks for registering your institution with AuthX
+                </p>
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Your request has been forwarded to the Government verification team
+                </p>
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  You will receive confirmation and account access details via email
+                </p>
+                <p className="flex items-start">
+                  <span className="text-green-500 mr-2">✓</span>
+                  Typical approval time: 2-3 business days
+                </p>
+              </div>
+              
+              <p className="text-sm text-gray-500 mt-4 mb-6">
+                We've sent a confirmation email to <strong>{formData.email}</strong>
+              </p>
+              
+              <button
+                onClick={handleAdminPopupClose}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Got it, Back to Home
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl w-full">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="grid md:grid-cols-2">
@@ -113,7 +176,6 @@ const RegisterPage: React.FC = () => {
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm hover:shadow">
                       <option value="user">User / HR</option>
                       <option value="university">University Admin</option>
-                      {/* Government option removed */}
                     </select>
                   </div>
                   {formData.userType === 'university' && (
