@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/AuthX-Authenticity_Validator_for_Academia/static/css/main.70cc06fa.css",
+    "main.js": "/AuthX-Authenticity_Validator_for_Academia/static/js/main.936c7daf.js",
+    "static/js/453.4519a753.chunk.js": "/AuthX-Authenticity_Validator_for_Academia/static/js/453.4519a753.chunk.js",
+    "index.html": "/AuthX-Authenticity_Validator_for_Academia/index.html",
+    "main.70cc06fa.css.map": "/AuthX-Authenticity_Validator_for_Academia/static/css/main.70cc06fa.css.map",
+    "main.936c7daf.js.map": "/AuthX-Authenticity_Validator_for_Academia/static/js/main.936c7daf.js.map",
+    "453.4519a753.chunk.js.map": "/AuthX-Authenticity_Validator_for_Academia/static/js/453.4519a753.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.70cc06fa.css",
+    "static/js/main.936c7daf.js"
+  ]
+}
