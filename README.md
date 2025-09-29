@@ -1,46 +1,147 @@
-# Getting Started with Create React App
+# AuthX - Secure Degree Verification Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A comprehensive React.js prototype for secure degree verification with three distinct portals: University Admin, HR/User, and Government. Built for the Smart India Hackathon by Team Xerox.
 
-## Available Scripts
+## 🚀 Features
 
-In the project directory, you can run:
+### University Admin Portal
+- **Real-time Dashboard**: Live verification statistics and fraud detection metrics
+- **CSV Bulk Upload**: Upload and process multiple degree records with progress tracking
+- **Fraud Alerts**: Automated alerts for high fraud detection rates
+- **Verification Management**: View and manage recent degree verifications
 
-### `npm start`
+### HR/User Portal
+- **File Upload**: Support for single files, bulk processing, and camera capture simulation
+- **Live Verification**: Real-time verification results with confidence scores
+- **Advanced Filtering**: Search and filter verifications by status, name, or degree type
+- **PDF Reports**: Generate and download detailed verification reports
+- **Drag & Drop Interface**: Intuitive file upload with progress indicators
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Government Portal
+- **Analytics Dashboard**: Comprehensive fraud trend analysis and institutional comparisons
+- **Interactive Charts**: Line charts, bar charts, and pie charts for data visualization
+- **Data Export**: Export institutional data in JSON and CSV formats
+- **Risk Assessment**: Color-coded risk levels for different institutions
+- **Real-time Updates**: Live data simulation with automatic updates
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🎨 Design Features
 
-### `npm test`
+- **Professional Light Theme**: Clean, modern interface with blue primary colors
+- **Responsive Design**: Fully responsive across desktop, tablet, and mobile devices
+- **Interactive Elements**: Hover effects, loading states, and smooth transitions
+- **Accessibility**: WCAG compliant with proper contrast ratios and keyboard navigation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🔐 Authentication
 
-### `npm run build`
+### Demo Credentials
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### University Admin
+- **Username**: `admin@university.edu`
+- **Password**: `admin123`
+- **Features**: Dashboard analytics, CSV upload, fraud alerts
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### HR Manager
+- **Username**: `hr@company.com`
+- **Password**: `hr123`
+- **Features**: File upload, verification results, PDF reports
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Government Official
+- **Username**: `gov@ministry.gov`
+- **Password**: `gov123`
+- **Features**: Analytics dashboard, data export, institutional monitoring
 
-### `npm run eject`
+## 🛠️ Technology Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Frontend**: React.js with TypeScript
+- **Styling**: Tailwind CSS
+- **Charts**: Recharts
+- **File Handling**: React Dropzone
+- **Icons**: Lucide React
+- **Routing**: React Router DOM
+- **PDF Generation**: jsPDF
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Getting Started
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Installation
 
-## Learn More
+1. Clone the repository:
+```bash
+git clone https://github.com/teamxerox/authx.git
+cd authx
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. Install dependencies:
+```bash
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Start the development server:
+```bash
+npm start
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## 📱 Usage
+
+1. **Login**: Use any of the demo credentials to access different portals
+2. **University Portal**: Monitor verifications, upload CSV files, view fraud alerts
+3. **HR Portal**: Upload documents, verify degrees, generate reports
+4. **Government Portal**: Analyze trends, export data, monitor institutions
+5. **Contact**: Visit the Team section to learn about the developers
+
+## 🔧 Development
+
+### Project Structure
+```
+src/
+├── components/          # Reusable components
+├── contexts/           # React contexts (Auth)
+├── pages/             # Main application pages
+├── types/             # TypeScript type definitions
+└── utils/             # Utility functions
+```
+
+### Key Components
+- `AuthContext`: Authentication state management
+- `ProtectedRoute`: Route protection based on user roles
+- `ContactSection`: Team information and contact details
+- Dashboard components for each portal type
+
+## 🎯 Demo Scenarios
+
+### For Judges
+1. **Login Flow**: Test all three portal logins with demo credentials
+2. **University Admin**: Upload CSV, view real-time stats, check fraud alerts
+3. **HR Manager**: Upload files, verify degrees, generate PDF reports
+4. **Government Official**: Analyze charts, export data, monitor institutions
+5. **Contact Section**: View team information and contact details
+
+### Real-time Features
+- Live statistics updates
+- Progress bars for file uploads
+- Interactive charts and visualizations
+- Responsive design across devices
+
+## 👥 Team Xerox
+
+- **Paranjay Soni** - Lead Developer
+- **Sarah Johnson** - UI/UX Designer  
+- **Michael Chen** - Backend Developer
+- **Emily Rodriguez** - Data Analyst
+
+## 📄 License
+
+This project is developed for the Smart India Hackathon 2024 by Team Xerox.
+
+## 🤝 Contributing
+
+This is a prototype developed for the Smart India Hackathon. For production use, additional security measures and backend integration would be required.
+
+---
+
+**Built with ❤️ by Team Xerox for Smart India Hackathon 2024**
