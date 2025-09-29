@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LearnMoreModal from '../components/LearnMoreModal';
-import { Shield, Users, CheckCircle, Globe, Star, TrendingUp, Award, Lock, Zap, Target, Headphones } from 'lucide-react';
+import { Shield, Users, CheckCircle, Globe, Star, TrendingUp, Award, Lock, Zap, Target, Headphones, FileText, Key, Fingerprint, QrCode } from 'lucide-react';
 
 const MainDashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -11,7 +11,229 @@ const MainDashboard: React.FC = () => {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // Add CSS animations to head
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+      @keyframes float-slow {
+        0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+        33% { transform: translateY(-15px) translateX(10px) rotate(120deg); }
+        66% { transform: translateY(-10px) translateX(-5px) rotate(240deg); }
+      }
+      @keyframes glow {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.1); }
+      }
+      @keyframes drift {
+        0% { transform: translateX(-100px) translateY(-50px) rotate(0deg); }
+        50% { transform: translateX(100px) translateY(50px) rotate(180deg); }
+        100% { transform: translateX(-100px) translateY(-50px) rotate(360deg); }
+      }
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 0.1; transform: scale(1); }
+        50% { opacity: 0.3; transform: scale(1.2); }
+      }
+      @keyframes certificate-float {
+        0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        25% { transform: translateY(-10px) rotate(5deg) scale(1.05); }
+        50% { transform: translateY(-5px) rotate(-3deg) scale(1.02); }
+        75% { transform: translateY(-8px) rotate(2deg) scale(1.03); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
+
+  // Professional Background Elements for Hero Section
+  const HeroBackgroundElements = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Animated Certificate Icons */}
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.08]"
+          style={{
+            animation: `certificate-float ${15 + i * 3}s infinite ease-in-out ${i * 2}s`,
+            top: `${20 + i * 12}%`,
+            left: `${10 + i * 15}%`,
+          }}
+        >
+          <FileText className="w-16 h-16 text-blue-300" />
+        </div>
+      ))}
+
+      {/* Floating Security Icons */}
+      {[...Array(5)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.06]"
+          style={{
+            animation: `float ${18 + i * 4}s infinite ease-in-out ${i * 1.5}s`,
+            top: `${15 + i * 16}%`,
+            right: `${5 + i * 18}%`,
+          }}
+        >
+          {i % 3 === 0 ? (
+            <Shield className="w-12 h-12 text-cyan-300" />
+          ) : i % 2 === 0 ? (
+            <Key className="w-12 h-12 text-purple-300" />
+          ) : (
+            <Fingerprint className="w-12 h-12 text-blue-300" />
+          )}
+        </div>
+      ))}
+
+      {/* Blockchain Network Nodes */}
+      {[...Array(8)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.04]"
+          style={{
+            animation: `drift ${25 + i * 5}s infinite linear ${i * 3}s`,
+            top: `${30 + i * 8}%`,
+            left: `${5 + i * 12}%`,
+          }}
+        >
+          <div className="flex items-center justify-center">
+            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+            <div className="w-12 h-0.5 bg-green-400/50"></div>
+            <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+          </div>
+        </div>
+      ))}
+
+      {/* Scanning Lines Effect */}
+      <div className="absolute inset-0 opacity-[0.03]">
+        <div 
+          className="absolute w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"
+          style={{
+            animation: `float 8s infinite ease-in-out`,
+            top: '30%'
+          }}
+        />
+        <div 
+          className="absolute w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+          style={{
+            animation: `float 12s infinite ease-in-out`,
+            top: '60%'
+          }}
+        />
+      </div>
+
+      {/* Geometric Grid Pattern */}
+      <div className="absolute inset-0 opacity-[0.02]">
+        <div className="w-full h-full"
+          style={{
+            backgroundImage: `
+              linear-gradient(90deg, rgba(59, 130, 246, 0.5) 1px, transparent 1px),
+              linear-gradient(180deg, rgba(59, 130, 246, 0.5) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            animation: 'float-slow 20s infinite linear'
+          }}
+        />
+      </div>
+
+      {/* Pulse Orbs */}
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full blur-xl"
+          style={{
+            animation: `pulse-glow ${6 + i * 2}s infinite ease-in-out`,
+            width: `${150 + i * 80}px`,
+            height: `${150 + i * 80}px`,
+            top: `${15 + i * 25}%`,
+            left: `${20 + i * 20}%`,
+            background: i % 3 === 0 
+              ? 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)'
+              : i % 3 === 1
+              ? 'radial-gradient(circle, rgba(34, 197, 94, 0.1) 0%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 70%)',
+          }}
+        />
+      ))}
+
+      {/* QR Code Elements */}
+      {[...Array(4)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.05]"
+          style={{
+            animation: `float-slow ${22 + i * 4}s infinite ease-in-out ${i * 2}s`,
+            bottom: `${10 + i * 15}%`,
+            right: `${10 + i * 12}%`,
+          }}
+        >
+          <QrCode className="w-14 h-14 text-cyan-300" />
+        </div>
+      ))}
+
+      {/* Verification Check Marks */}
+      {[...Array(5)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.07]"
+          style={{
+            animation: `float ${16 + i * 3}s infinite ease-in-out ${i * 1.8}s`,
+            top: `${40 + i * 10}%`,
+            left: `${60 + i * 8}%`,
+          }}
+        >
+          <CheckCircle className="w-10 h-10 text-green-300" />
+        </div>
+      ))}
+    </div>
+  );
+
+  // Floating Elements for other sections
+  const FloatingElements = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Subtle geometric shapes for content sections */}
+      {[...Array(6)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.02]"
+          style={{
+            animation: `float-slow ${20 + i * 5}s infinite ease-in-out ${i * 2}s`,
+            top: `${10 + i * 12}%`,
+            left: `${5 + i * 15}%`,
+          }}
+        >
+          {i % 3 === 0 ? (
+            <div className="w-16 h-16 border-2 border-blue-400 rounded-lg rotate-45" />
+          ) : i % 3 === 1 ? (
+            <div className="w-12 h-12 border-2 border-purple-400 rounded-full" />
+          ) : (
+            <div className="w-20 h-20 border-2 border-cyan-400 rotate-12" />
+          )}
+        </div>
+      ))}
+
+      {/* Glowing orbs */}
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full blur-xl"
+          style={{
+            animation: `glow ${8 + i * 2}s infinite ease-in-out`,
+            width: `${100 + i * 50}px`,
+            height: `${100 + i * 50}px`,
+            top: `${20 + i * 20}%`,
+            left: `${10 + i * 25}%`,
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)',
+          }}
+        />
+      ))}
+    </div>
+  );
 
   const stats = [
     { 
@@ -108,7 +330,7 @@ const MainDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 overflow-hidden">
       {/* Enhanced Header */}
       <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -155,48 +377,55 @@ const MainDashboard: React.FC = () => {
         </div>
       </nav>
 
-      {/* Enhanced Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-white via-blue-50 to-indigo-100">
-        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
-        <div className="max-w-7xl mx-auto relative z-10">
+      {/* NEW: Dark Hero Section with Background Elements */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-slate-900 to-blue-900 min-h-[85vh] flex items-center">
+        <HeroBackgroundElements />
+        
+        {/* Premium Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10 w-full">
           <div className="relative z-10 py-20 lg:py-28">
             <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div className={`text-center lg:text-left transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-                <div className="flex justify-center lg:justify-start mb-6">
-                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
+              <div className={`text-center transition-all duration-700 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+                <div className="flex justify-center mb-6">
+                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-blue-500/20 text-blue-300 text-sm font-medium border border-blue-400/30 backdrop-blur-sm">
                     <TrendingUp className="w-4 h-4 mr-2" />
                     Trusted by 2,847+ institutions worldwide
                   </div>
                 </div>
                 
-                <h1 className="text-4xl tracking-tight font-bold text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl">
+                <h1 className="text-5xl tracking-tight font-bold text-white sm:text-6xl md:text-7xl lg:text-8xl mb-6">
                   <span className="block">Secure Certificate</span>
-                  <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mt-2">
+                  <span className="block bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text text-transparent mt-4">
                     Verification Platform
                   </span>
                 </h1>
                 
-                <p className="mt-6 text-xl text-gray-600 max-w-3xl mx-auto lg:mx-0 leading-relaxed">
-                  Enterprise-grade certificate verification with military-grade security. 
-                  Instantly verify credentials while ensuring complete data integrity and privacy.
+                <p className="mt-8 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                  Enterprise-grade certificate verification powered by blockchain technology. 
+                  Instantly verify credentials with military-grade security and complete data integrity.
                 </p>
                 
-                <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     to="/login"
-                    className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-indigo-700"
+                    className="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 border border-blue-500/30"
                   >
-                    <Zap className="w-5 h-5 mr-3" />
+                    <Zap className="w-6 h-6 mr-3" />
                     Get Started
-                    <div className="absolute inset-0 rounded-xl bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                    <div className="absolute inset-0 rounded-2xl bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                   </Link>
                   
                   <button
                     onClick={() => setShowLearnMore(true)}
-                    className="group inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:border-blue-300"
+                    className="group inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-gray-200 bg-gray-800/50 border-2 border-gray-600/50 rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300 hover:border-blue-400/50 backdrop-blur-sm"
                   >
                     Learn More
-                    <div className="absolute inset-0 rounded-xl bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 rounded-2xl bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </div>
               </div>
@@ -206,8 +435,9 @@ const MainDashboard: React.FC = () => {
       </div>
 
       {/* Enhanced Stats Section */}
-      <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-20 bg-white relative">
+        <FloatingElements />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div
@@ -230,8 +460,9 @@ const MainDashboard: React.FC = () => {
       </div>
 
       {/* Enhanced Features Section */}
-      <div className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-20 bg-gradient-to-br from-slate-50 to-blue-50 relative">
+        <FloatingElements />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Enterprise-Grade Features
@@ -263,8 +494,9 @@ const MainDashboard: React.FC = () => {
       </div>
 
       {/* Enhanced Testimonials */}
-      <div className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-20 bg-white relative">
+        <FloatingElements />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
               Trusted by Industry Leaders

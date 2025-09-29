@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Shield, GraduationCap, Building, Users } from 'lucide-react';
+import { Shield, GraduationCap, Building, Users, FileText, Key, Fingerprint } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -27,6 +27,63 @@ const LoginPage: React.FC = () => {
       setError('Invalid credentials');
     }
   };
+
+  // Background Elements Component
+  const BackgroundElements = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Floating Security Icons */}
+      {[...Array(4)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.05]"
+          style={{
+            animation: `float ${18 + i * 4}s infinite ease-in-out ${i * 1.5}s`,
+            top: `${20 + i * 18}%`,
+            left: `${8 + i * 20}%`,
+          }}
+        >
+          {i % 2 === 0 ? (
+            <Key className="w-8 h-8 text-blue-400" />
+          ) : (
+            <Fingerprint className="w-8 h-8 text-purple-400" />
+          )}
+        </div>
+      ))}
+
+      {/* Certificate Icons */}
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.04]"
+          style={{
+            animation: `float-slow ${20 + i * 5}s infinite ease-in-out ${i * 2}s`,
+            top: `${30 + i * 15}%`,
+            right: `${12 + i * 18}%`,
+          }}
+        >
+          <FileText className="w-10 h-10 text-cyan-400" />
+        </div>
+      ))}
+
+      {/* Glowing Orbs */}
+      {[...Array(2)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full blur-xl"
+          style={{
+            animation: `glow ${8 + i * 2}s infinite ease-in-out`,
+            width: `${150 + i * 60}px`,
+            height: `${150 + i * 60}px`,
+            top: `${25 + i * 40}%`,
+            left: `${20 + i * 25}%`,
+            background: i % 2 === 0 
+              ? 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%)',
+          }}
+        />
+      ))}
+    </div>
+  );
 
   const demoCredentials = [
     {
@@ -56,7 +113,9 @@ const LoginPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-blue-900 flex items-center justify-center p-4 relative overflow-hidden">
+      <BackgroundElements />
+      
       <div className="max-w-6xl w-full">
         <div className="mb-6">
           <button
@@ -69,9 +128,9 @@ const LoginPage: React.FC = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Shield className="h-12 w-12 text-blue-600 mr-3" />
-            <h1 className="text-4xl font-bold text-gray-900">AuthX</h1>
+            <h1 className="text-4xl font-bold text-white">AuthX</h1>
           </div>
-          <p className="text-xl text-gray-600">Secure Degree Verification Platform</p>
+          <p className="text-xl text-gray-300">Secure Degree Verification Platform</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -135,7 +194,7 @@ const LoginPage: React.FC = () => {
 
           {/* Demo Credentials */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Demo Credentials</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">Demo Credentials</h3>
             {demoCredentials.map((cred, index) => (
               <div
                 key={index}
@@ -180,6 +239,22 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+          33% { transform: translateY(-15px) translateX(10px) rotate(120deg); }
+          66% { transform: translateY(-10px) translateX(-5px) rotate(240deg); }
+        }
+        @keyframes glow {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.1); }
+        }
+      `}</style>
     </div>
   );
 };

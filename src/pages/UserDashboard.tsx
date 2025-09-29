@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import PieChart from '../components/PieChart';
-import { Upload, Camera, FileText, Image, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, Camera, FileText, Image, X, CheckCircle, AlertCircle, Shield, Key, Fingerprint } from 'lucide-react';
 
 const UserDashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -19,6 +19,63 @@ const UserDashboard: React.FC = () => {
     totalFraud: 0,
     totalProcessed: 0
   });
+
+  // Background Elements Component
+  const BackgroundElements = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Floating Security Icons */}
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.03]"
+          style={{
+            animation: `float ${18 + i * 4}s infinite ease-in-out ${i * 1.5}s`,
+            top: `${15 + i * 25}%`,
+            right: `${5 + i * 15}%`,
+          }}
+        >
+          {i % 2 === 0 ? (
+            <Key className="w-6 h-6 text-blue-400" />
+          ) : (
+            <Fingerprint className="w-6 h-6 text-purple-400" />
+          )}
+        </div>
+      ))}
+
+      {/* Certificate Icons */}
+      {[...Array(2)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute opacity-[0.02]"
+          style={{
+            animation: `float-slow ${20 + i * 5}s infinite ease-in-out ${i * 2}s`,
+            top: `${40 + i * 20}%`,
+            left: `${10 + i * 20}%`,
+          }}
+        >
+          <FileText className="w-8 h-8 text-cyan-400" />
+        </div>
+      ))}
+
+      {/* Glowing Orbs */}
+      {[...Array(2)].map((_, i) => (
+        <div
+          key={i}
+          className="absolute rounded-full blur-xl"
+          style={{
+            animation: `glow ${10 + i * 3}s infinite ease-in-out`,
+            width: `${120 + i * 80}px`,
+            height: `${120 + i * 80}px`,
+            top: `${20 + i * 60}%`,
+            left: `${10 + i * 30}%`,
+            background: i % 2 === 0 
+              ? 'radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, transparent 70%)'
+              : 'radial-gradient(circle, rgba(139, 92, 246, 0.03) 0%, transparent 70%)',
+          }}
+        />
+      ))}
+    </div>
+  );
 
   // Camera functions
   const startCamera = async () => {
@@ -144,24 +201,29 @@ const UserDashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-blue-900 relative overflow-hidden">
+      <BackgroundElements />
+      
+      <nav className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-sm border-b border-gray-700 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => window.location.href = '/'}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                className="bg-gray-700 hover:bg-gray-600 text-gray-200 px-3 py-2 rounded-md text-sm font-medium flex items-center transition-colors"
               >
                 ← Back to Home
               </button>
-              <h1 className="text-xl font-semibold text-gray-900">User Portal</h1>
+              <div className="flex-shrink-0 flex items-center space-x-2">
+                <Shield className="h-6 w-6 text-blue-400" />
+                <h1 className="text-xl font-semibold text-white">User Portal</h1>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-700">Welcome, {user?.name}</span>
+              <span className="text-sm text-gray-300">Welcome, {user?.name}</span>
               <button
                 onClick={logout}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 Logout
               </button>
@@ -171,7 +233,7 @@ const UserDashboard: React.FC = () => {
       </nav>
 
       {/* Tab Navigation */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm border-b border-gray-700 shadow-sm relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
             {[
@@ -184,8 +246,8 @@ const UserDashboard: React.FC = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 flex items-center space-x-2 ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600 bg-blue-50'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'border-blue-500 text-blue-400 bg-blue-900 bg-opacity-20'
+                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600 hover:bg-gray-700 hover:bg-opacity-50'
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -196,65 +258,65 @@ const UserDashboard: React.FC = () => {
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 relative z-10">
         <div className="px-4 py-6 sm:px-0">
           {activeTab === 'dashboard' && (
             <>
               {/* Enhanced Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-gradient-to-r from-blue-500 to-blue-600 overflow-hidden shadow-lg rounded-xl transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 overflow-hidden shadow-2xl rounded-xl transform hover:scale-105 transition-all duration-300 border border-blue-500 border-opacity-30">
                   <div className="p-6 text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-blue-100 text-sm font-medium">Total Processed</p>
+                        <p className="text-blue-200 text-sm font-medium">Total Processed</p>
                         <p className="text-3xl font-bold">{stats.totalProcessed}</p>
                       </div>
-                      <div className="bg-blue-400 bg-opacity-30 p-3 rounded-full">
-                        <FileText className="w-6 h-6" />
+                      <div className="bg-blue-500 bg-opacity-30 p-3 rounded-full">
+                        <FileText className="w-6 h-6 text-blue-200" />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-green-500 to-green-600 overflow-hidden shadow-lg rounded-xl transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-green-600 to-green-700 overflow-hidden shadow-2xl rounded-xl transform hover:scale-105 transition-all duration-300 border border-green-500 border-opacity-30">
                   <div className="p-6 text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-green-100 text-sm font-medium">Verified</p>
+                        <p className="text-green-200 text-sm font-medium">Verified</p>
                         <p className="text-3xl font-bold">{stats.totalVerified}</p>
                       </div>
-                      <div className="bg-green-400 bg-opacity-30 p-3 rounded-full">
-                        <CheckCircle className="w-6 h-6" />
+                      <div className="bg-green-500 bg-opacity-30 p-3 rounded-full">
+                        <CheckCircle className="w-6 h-6 text-green-200" />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-red-500 to-red-600 overflow-hidden shadow-lg rounded-xl transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-red-600 to-red-700 overflow-hidden shadow-2xl rounded-xl transform hover:scale-105 transition-all duration-300 border border-red-500 border-opacity-30">
                   <div className="p-6 text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-red-100 text-sm font-medium">Fraud Detected</p>
+                        <p className="text-red-200 text-sm font-medium">Fraud Detected</p>
                         <p className="text-3xl font-bold">{stats.totalFraud}</p>
                       </div>
-                      <div className="bg-red-400 bg-opacity-30 p-3 rounded-full">
-                        <AlertCircle className="w-6 h-6" />
+                      <div className="bg-red-500 bg-opacity-30 p-3 rounded-full">
+                        <AlertCircle className="w-6 h-6 text-red-200" />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-purple-500 to-purple-600 overflow-hidden shadow-lg rounded-xl transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-purple-600 to-purple-700 overflow-hidden shadow-2xl rounded-xl transform hover:scale-105 transition-all duration-300 border border-purple-500 border-opacity-30">
                   <div className="p-6 text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-purple-100 text-sm font-medium">Success Rate</p>
+                        <p className="text-purple-200 text-sm font-medium">Success Rate</p>
                         <p className="text-3xl font-bold">
                           {stats.totalProcessed > 0 ? ((stats.totalVerified / stats.totalProcessed) * 100).toFixed(1) : 0}%
                         </p>
                       </div>
-                      <div className="bg-purple-400 bg-opacity-30 p-3 rounded-full">
-                        <Upload className="w-6 h-6" />
+                      <div className="bg-purple-500 bg-opacity-30 p-3 rounded-full">
+                        <Upload className="w-6 h-6 text-purple-200" />
                       </div>
                     </div>
                   </div>
@@ -262,9 +324,9 @@ const UserDashboard: React.FC = () => {
               </div>
 
               {/* Recent Results */}
-              <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+              <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
+                <div className="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 border-b border-gray-600">
+                  <h3 className="text-lg font-semibold text-white flex items-center">
                     <FileText className="w-5 h-5 mr-2" />
                     Recent Verification Results
                   </h3>
@@ -273,32 +335,32 @@ const UserDashboard: React.FC = () => {
                   {verificationResults.length > 0 ? (
                     <div className="space-y-4">
                       {verificationResults.slice(-5).reverse().map((result) => (
-                        <div key={result.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div key={result.id} className="flex items-center justify-between p-4 bg-gray-700 bg-opacity-50 rounded-lg hover:bg-gray-600 hover:bg-opacity-50 transition-colors border border-gray-600">
                           <div className="flex items-center space-x-4">
                             <div className={`w-3 h-3 rounded-full ${result.status === 'verified' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                             <div>
-                              <p className="font-medium text-gray-900">{result.studentName}</p>
-                              <p className="text-sm text-gray-500">{result.institution} • {result.degree}</p>
+                              <p className="font-medium text-white">{result.studentName}</p>
+                              <p className="text-sm text-gray-300">{result.institution} • {result.degree}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-4">
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                               result.status === 'verified' 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
+                                ? 'bg-green-900 bg-opacity-50 text-green-300 border border-green-700 border-opacity-50' 
+                                : 'bg-red-900 bg-opacity-50 text-red-300 border border-red-700 border-opacity-50'
                             }`}>
                               {result.status === 'verified' ? 'Verified' : 'Fraud'}
                             </span>
-                            <span className="text-sm text-gray-500">{result.confidence}%</span>
+                            <span className="text-sm text-gray-400">{result.confidence}%</span>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <FileText className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-                      <p className="text-gray-500 text-lg">No certificates processed yet</p>
-                      <p className="text-gray-400 text-sm">Upload certificates to get started</p>
+                      <FileText className="mx-auto h-16 w-16 text-gray-500 mb-4" />
+                      <p className="text-gray-400 text-lg">No certificates processed yet</p>
+                      <p className="text-gray-500 text-sm">Upload certificates to get started</p>
                     </div>
                   )}
                 </div>
@@ -309,13 +371,13 @@ const UserDashboard: React.FC = () => {
           {activeTab === 'upload' && (
             <div className="space-y-6">
               {/* Upload Method Selection */}
-              <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+              <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
+                <div className="bg-gradient-to-r from-blue-900 bg-opacity-50 to-indigo-900 bg-opacity-50 px-6 py-4 border-b border-gray-600">
+                  <h3 className="text-lg font-semibold text-white flex items-center">
                     <Upload className="w-5 h-5 mr-2" />
                     Upload Method
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">Choose how you want to upload certificates</p>
+                  <p className="text-sm text-gray-300 mt-1">Choose how you want to upload certificates</p>
                 </div>
                 <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -323,15 +385,15 @@ const UserDashboard: React.FC = () => {
                       onClick={() => setUploadMethod('file')}
                       className={`p-6 border-2 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-3 ${
                         uploadMethod === 'file'
-                          ? 'border-blue-500 bg-blue-50 shadow-md'
-                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                          ? 'border-blue-500 bg-blue-900 bg-opacity-30 shadow-md'
+                          : 'border-gray-600 hover:border-blue-400 hover:bg-gray-700 hover:bg-opacity-50'
                       }`}
                     >
-                      <FileText className={`w-12 h-12 ${uploadMethod === 'file' ? 'text-blue-600' : 'text-gray-400'}`} />
-                      <span className={`font-medium ${uploadMethod === 'file' ? 'text-blue-700' : 'text-gray-700'}`}>
+                      <FileText className={`w-12 h-12 ${uploadMethod === 'file' ? 'text-blue-400' : 'text-gray-400'}`} />
+                      <span className={`font-medium ${uploadMethod === 'file' ? 'text-blue-300' : 'text-gray-300'}`}>
                         File Upload
                       </span>
-                      <span className="text-sm text-gray-500 text-center">
+                      <span className="text-sm text-gray-400 text-center">
                         Upload PDF, PNG, JPG files from your device
                       </span>
                     </button>
@@ -340,15 +402,15 @@ const UserDashboard: React.FC = () => {
                       onClick={() => setUploadMethod('camera')}
                       className={`p-6 border-2 rounded-xl transition-all duration-300 flex flex-col items-center justify-center space-y-3 ${
                         uploadMethod === 'camera'
-                          ? 'border-blue-500 bg-blue-50 shadow-md'
-                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                          ? 'border-blue-500 bg-blue-900 bg-opacity-30 shadow-md'
+                          : 'border-gray-600 hover:border-blue-400 hover:bg-gray-700 hover:bg-opacity-50'
                       }`}
                     >
-                      <Camera className={`w-12 h-12 ${uploadMethod === 'camera' ? 'text-blue-600' : 'text-gray-400'}`} />
-                      <span className={`font-medium ${uploadMethod === 'camera' ? 'text-blue-700' : 'text-gray-700'}`}>
+                      <Camera className={`w-12 h-12 ${uploadMethod === 'camera' ? 'text-blue-400' : 'text-gray-400'}`} />
+                      <span className={`font-medium ${uploadMethod === 'camera' ? 'text-blue-300' : 'text-gray-300'}`}>
                         Camera Capture
                       </span>
-                      <span className="text-sm text-gray-500 text-center">
+                      <span className="text-sm text-gray-400 text-center">
                         Use your camera to capture certificate photos
                       </span>
                     </button>
@@ -356,15 +418,15 @@ const UserDashboard: React.FC = () => {
 
                   {/* File Upload Section */}
                   {uploadMethod === 'file' && (
-                    <div className="border-2 border-dashed border-blue-300 rounded-xl p-8 hover:border-blue-400 transition-colors">
+                    <div className="border-2 border-dashed border-blue-500 border-opacity-50 rounded-xl p-8 hover:border-blue-400 transition-colors bg-gray-700 bg-opacity-30">
                       <div className="text-center">
                         <FileText className="mx-auto h-16 w-16 text-blue-400 mb-4" />
                         <div>
                           <label htmlFor="bulk-upload" className="cursor-pointer">
-                            <span className="text-lg font-medium text-gray-900 block">
+                            <span className="text-lg font-medium text-white block">
                               Drop your certificates here, or click to browse
                             </span>
-                            <span className="text-sm text-gray-500 mt-1 block">
+                            <span className="text-sm text-gray-300 mt-1 block">
                               Supports PDF, PNG, JPG files up to 10MB each
                             </span>
                           </label>
@@ -385,10 +447,10 @@ const UserDashboard: React.FC = () => {
                   {uploadMethod === 'camera' && (
                     <div className="space-y-4">
                       {!cameraActive && !capturedImage && (
-                        <div className="border-2 border-dashed border-blue-300 rounded-xl p-8 text-center">
+                        <div className="border-2 border-dashed border-blue-500 border-opacity-50 rounded-xl p-8 text-center bg-gray-700 bg-opacity-30">
                           <Camera className="mx-auto h-16 w-16 text-blue-400 mb-4" />
-                          <h4 className="text-lg font-medium text-gray-900 mb-2">Capture Certificate</h4>
-                          <p className="text-sm text-gray-500 mb-4">Use your camera to take a photo of the certificate</p>
+                          <h4 className="text-lg font-medium text-white mb-2">Capture Certificate</h4>
+                          <p className="text-sm text-gray-300 mb-4">Use your camera to take a photo of the certificate</p>
                           <button
                             onClick={startCamera}
                             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2 mx-auto"
@@ -400,12 +462,12 @@ const UserDashboard: React.FC = () => {
                       )}
 
                       {cameraActive && (
-                        <div className="border-2 border-blue-300 rounded-xl overflow-hidden">
+                        <div className="border-2 border-blue-500 border-opacity-50 rounded-xl overflow-hidden bg-gray-800">
                           <div className="bg-gray-900 p-4 flex justify-between items-center">
                             <span className="text-white text-sm">Camera Active - Position certificate in frame</span>
                             <button
                               onClick={stopCamera}
-                              className="text-white hover:text-gray-300"
+                              className="text-white hover:text-gray-300 transition-colors"
                             >
                               <X className="w-5 h-5" />
                             </button>
@@ -416,7 +478,7 @@ const UserDashboard: React.FC = () => {
                             playsInline
                             className="w-full h-64 object-cover"
                           />
-                          <div className="p-4 bg-gray-50 border-t">
+                          <div className="p-4 bg-gray-700 border-t border-gray-600">
                             <button
                               onClick={captureImage}
                               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
@@ -429,15 +491,15 @@ const UserDashboard: React.FC = () => {
                       )}
 
                       {capturedImage && (
-                        <div className="border-2 border-green-300 rounded-xl overflow-hidden">
-                          <div className="bg-green-50 p-4 flex justify-between items-center">
-                            <span className="text-green-800 text-sm font-medium">Certificate Captured Successfully</span>
+                        <div className="border-2 border-green-500 border-opacity-50 rounded-xl overflow-hidden bg-gray-800">
+                          <div className="bg-green-900 bg-opacity-30 p-4 flex justify-between items-center">
+                            <span className="text-green-300 text-sm font-medium">Certificate Captured Successfully</span>
                             <button
                               onClick={() => {
                                 setCapturedImage(null);
                                 setUploadFiles(prev => prev.filter(file => !file.name.startsWith('captured-certificate')));
                               }}
-                              className="text-green-600 hover:text-green-800"
+                              className="text-green-400 hover:text-green-300 transition-colors"
                             >
                               <X className="w-5 h-5" />
                             </button>
@@ -445,7 +507,7 @@ const UserDashboard: React.FC = () => {
                           <img
                             src={capturedImage}
                             alt="Captured certificate"
-                            className="w-full h-64 object-contain bg-gray-100"
+                            className="w-full h-64 object-contain bg-gray-700"
                           />
                         </div>
                       )}
@@ -454,9 +516,9 @@ const UserDashboard: React.FC = () => {
 
                   {/* Selected Files Preview */}
                   {uploadFiles.length > 0 && (
-                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="mt-6 p-4 bg-blue-900 bg-opacity-30 rounded-lg border border-blue-700 border-opacity-50">
                       <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-medium text-blue-900 flex items-center">
+                        <h4 className="font-medium text-blue-200 flex items-center">
                           <FileText className="w-4 h-4 mr-2" />
                           Selected Files ({uploadFiles.length})
                         </h4>
@@ -465,7 +527,7 @@ const UserDashboard: React.FC = () => {
                             setUploadFiles([]);
                             setCapturedImage(null);
                           }}
-                          className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center"
+                          className="text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center transition-colors"
                         >
                           <X className="w-4 h-4 mr-1" />
                           Clear All
@@ -473,21 +535,21 @@ const UserDashboard: React.FC = () => {
                       </div>
                       <div className="space-y-2 max-h-40 overflow-y-auto">
                         {uploadFiles.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                          <div key={index} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg border border-gray-600">
                             <div className="flex items-center space-x-3">
                               {file.type.startsWith('image/') ? (
-                                <Image className="w-5 h-5 text-blue-500" />
+                                <Image className="w-5 h-5 text-blue-400" />
                               ) : (
-                                <FileText className="w-5 h-5 text-blue-500" />
+                                <FileText className="w-5 h-5 text-blue-400" />
                               )}
                               <div>
-                                <span className="text-sm font-medium text-gray-900 block">{file.name}</span>
-                                <span className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</span>
+                                <span className="text-sm font-medium text-white block">{file.name}</span>
+                                <span className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB</span>
                               </div>
                             </div>
                             <button
                               onClick={() => removeFile(index)}
-                              className="text-gray-400 hover:text-red-500 transition-colors"
+                              className="text-gray-400 hover:text-red-400 transition-colors"
                             >
                               <X className="w-4 h-4" />
                             </button>
@@ -498,7 +560,7 @@ const UserDashboard: React.FC = () => {
                         <button 
                           onClick={processCertificates}
                           disabled={isProcessing}
-                          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
                         >
                           {isProcessing ? (
                             <>
@@ -520,42 +582,42 @@ const UserDashboard: React.FC = () => {
 
               {/* Results Section */}
               {verificationResults.length > 0 && (
-                <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b">
-                    <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+                <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
+                  <div className="bg-gradient-to-r from-green-900 bg-opacity-50 to-emerald-900 bg-opacity-50 px-6 py-4 border-b border-gray-600">
+                    <h3 className="text-lg font-semibold text-white flex items-center">
                       <CheckCircle className="w-5 h-5 mr-2" />
                       Verification Results
                     </h3>
                   </div>
                   <div className="p-6">
                     <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                      <table className="min-w-full divide-y divide-gray-700">
+                        <thead className="bg-gray-700 bg-opacity-50">
                           <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Institution</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Degree</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Confidence</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Student</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Institution</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Degree</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Confidence</th>
                           </tr>
                         </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
+                        <tbody className="bg-gray-800 bg-opacity-50 divide-y divide-gray-700">
                           {verificationResults.map((result) => (
-                            <tr key={result.id} className="hover:bg-gray-50 transition-colors">
-                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <tr key={result.id} className="hover:bg-gray-700 hover:bg-opacity-50 transition-colors">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                                 {result.studentName}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                 {result.institution}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                 {result.degree}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
                                   result.status === 'verified' 
-                                    ? 'bg-green-100 text-green-800' 
-                                    : 'bg-red-100 text-red-800'
+                                    ? 'bg-green-900 bg-opacity-50 text-green-300 border border-green-700 border-opacity-50' 
+                                    : 'bg-red-900 bg-opacity-50 text-red-300 border border-red-700 border-opacity-50'
                                 }`}>
                                   {result.status === 'verified' ? (
                                     <>
@@ -570,7 +632,7 @@ const UserDashboard: React.FC = () => {
                                   )}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                                 {result.confidence}%
                               </td>
                             </tr>
@@ -588,33 +650,35 @@ const UserDashboard: React.FC = () => {
             <div className="space-y-6">
               {/* Report Overview */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <PieChart
-                  title="Verification Status Distribution"
-                  data={[
-                    { name: 'Verified', value: stats.totalVerified, color: '#10B981' },
-                    { name: 'Fraud Detected', value: stats.totalFraud, color: '#EF4444' }
-                  ]}
-                />
+                <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700">
+                  <PieChart
+                    title="Verification Status Distribution"
+                    data={[
+                      { name: 'Verified', value: stats.totalVerified, color: '#10B981' },
+                      { name: 'Fraud Detected', value: stats.totalFraud, color: '#EF4444' }
+                    ]}
+                  />
+                </div>
                 
-                <div className="bg-white shadow-xl rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-2xl rounded-xl p-6 border border-gray-700">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                     <FileText className="w-5 h-5 mr-2" />
                     Summary Statistics
                   </h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                      <span className="text-sm font-medium text-blue-900">Total Processed</span>
-                      <span className="text-2xl font-bold text-blue-600">{stats.totalProcessed}</span>
+                    <div className="flex justify-between items-center p-3 bg-blue-900 bg-opacity-30 rounded-lg border border-blue-700 border-opacity-50">
+                      <span className="text-sm font-medium text-blue-300">Total Processed</span>
+                      <span className="text-2xl font-bold text-blue-400">{stats.totalProcessed}</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                      <span className="text-sm font-medium text-green-900">Success Rate</span>
-                      <span className="text-2xl font-bold text-green-600">
+                    <div className="flex justify-between items-center p-3 bg-green-900 bg-opacity-30 rounded-lg border border-green-700 border-opacity-50">
+                      <span className="text-sm font-medium text-green-300">Success Rate</span>
+                      <span className="text-2xl font-bold text-green-400">
                         {stats.totalProcessed > 0 ? ((stats.totalVerified / stats.totalProcessed) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                      <span className="text-sm font-medium text-red-900">Fraud Rate</span>
-                      <span className="text-2xl font-bold text-red-600">
+                    <div className="flex justify-between items-center p-3 bg-red-900 bg-opacity-30 rounded-lg border border-red-700 border-opacity-50">
+                      <span className="text-sm font-medium text-red-300">Fraud Rate</span>
+                      <span className="text-2xl font-bold text-red-400">
                         {stats.totalProcessed > 0 ? ((stats.totalFraud / stats.totalProcessed) * 100).toFixed(1) : 0}%
                       </span>
                     </div>
@@ -623,19 +687,19 @@ const UserDashboard: React.FC = () => {
               </div>
 
               {/* Download Report */}
-              <div className="bg-white shadow-xl rounded-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-50 to-indigo-50 px-6 py-4 border-b">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+              <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm shadow-2xl rounded-xl overflow-hidden border border-gray-700">
+                <div className="bg-gradient-to-r from-purple-900 bg-opacity-50 to-indigo-900 bg-opacity-50 px-6 py-4 border-b border-gray-600">
+                  <h3 className="text-lg font-semibold text-white flex items-center">
                     <Upload className="w-5 h-5 mr-2" />
                     Download Verification Report
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">Export detailed verification data and analytics</p>
+                  <p className="text-sm text-gray-300 mt-1">Export detailed verification data and analytics</p>
                 </div>
                 <div className="p-6">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-gray-700 bg-opacity-50 rounded-lg border border-gray-600">
                     <div>
-                      <h4 className="font-medium text-gray-900">Complete Verification Report</h4>
-                      <p className="text-sm text-gray-500">Includes all verification results, statistics, and analytics</p>
+                      <h4 className="font-medium text-white">Complete Verification Report</h4>
+                      <p className="text-sm text-gray-300">Includes all verification results, statistics, and analytics</p>
                     </div>
                     <button
                       onClick={downloadReport}
@@ -651,6 +715,22 @@ const UserDashboard: React.FC = () => {
           )}
         </div>
       </main>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+          33% { transform: translateY(-15px) translateX(10px) rotate(120deg); }
+          66% { transform: translateY(-10px) translateX(-5px) rotate(240deg); }
+        }
+        @keyframes glow {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.1); }
+        }
+      `}</style>
     </div>
   );
 };

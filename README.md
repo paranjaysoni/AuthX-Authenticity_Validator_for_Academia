@@ -38,7 +38,7 @@ A comprehensive React.js prototype for secure degree verification with three dis
 #### University Admin
 - **Username**: `admin@university.edu`
 - **Password**: `admin123`
-- **Features**: Dashboard analytics, CSV upload, fraud alerts
+- **Features**: Dashboard analytics, CSV upload, fraud alerts, PDF reports
 
 #### HR Manager
 - **Username**: `hr@company.com`
@@ -48,7 +48,7 @@ A comprehensive React.js prototype for secure degree verification with three dis
 #### Government Official
 - **Username**: `gov@ministry.gov`
 - **Password**: `gov123`
-- **Features**: Analytics dashboard, data export, institutional monitoring
+- **Features**: Analytics dashboard, data export, institutional monitoring, PDF reports
 
 ## 🛠️ Technology Stack
 
@@ -60,38 +60,12 @@ A comprehensive React.js prototype for secure degree verification with three dis
 - **Routing**: React Router DOM
 - **PDF Generation**: jsPDF
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/teamxerox/authx.git
-cd authx
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm start
-```
-
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
 ## 📱 Usage
 
 1. **Login**: Use any of the demo credentials to access different portals
-2. **University Portal**: Monitor verifications, upload CSV files, view fraud alerts
+2. **University Portal**: Monitor verifications, upload CSV files, view fraud alerts, generate reports
 3. **HR Portal**: Upload documents, verify degrees, generate reports
-4. **Government Portal**: Analyze trends, export data, monitor institutions
+4. **Government Portal**: Analyze trends, export data, monitor institutions, generate reports
 5. **Contact**: Visit the Team section to learn about the developers
 
 ## 🔧 Development
@@ -114,13 +88,6 @@ src/
 
 ## 🎯 Demo Scenarios
 
-### For Judges
-1. **Login Flow**: Test all three portal logins with demo credentials
-2. **University Admin**: Upload CSV, view real-time stats, check fraud alerts
-3. **HR Manager**: Upload files, verify degrees, generate PDF reports
-4. **Government Official**: Analyze charts, export data, monitor institutions
-5. **Contact Section**: View team information and contact details
-
 ### Real-time Features
 - Live statistics updates
 - Progress bars for file uploads
@@ -129,10 +96,12 @@ src/
 
 ## 👥 Team Xerox
 
-- **Paranjay Soni** - Lead Developer
-- **Sarah Johnson** - UI/UX Designer  
-- **Michael Chen** - Backend Developer
-- **Emily Rodriguez** - Data Analyst
+- **Paranjay Soni** - Team Leader
+- **Vedanshi Shrivastava**  
+- **Shashank**
+- **Abhijeet Biswas**
+- **Ayush Ranjan**
+- **Shubham Ranjan**
 
 ## 📄 License
 
@@ -140,7 +109,7 @@ This project is developed for the Smart India Hackathon 2025 by Team Xerox.
 
 ## 🤝 Contributing
 
-This is a prototype developed for the Smart India Hackathon. For production use, additional security measures and backend integration would be required.
+This is a demo prototype developed for the Smart India Hackathon. For production use, additional security measures and backend integration would be required.
 
 ---
 
