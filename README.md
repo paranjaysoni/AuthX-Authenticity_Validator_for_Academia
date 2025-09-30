@@ -2,6 +2,13 @@
 
 A comprehensive React.js prototype for secure degree verification with three distinct portals: University Admin, HR/User, and Government. Built for the Smart India Hackathon by Team Xerox.
 
+## 🌐 Live Demo
+
+**🚀 Live Application:** [https://paranjaysoni.github.io/authx-prototype](https://paranjaysoni.github.io/authx-prototype)
+
+**📂 Source Code:** [https://github.com/paranjaysoni/AuthX-Authenticity_Validator_for_Academia.git](https://github.com/paranjaysoni/AuthX-Authenticity_Validator_for_Academia.git)
+
+
 ## 🚀 Features
 
 ### University Admin Portal
