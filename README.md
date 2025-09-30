@@ -4,7 +4,7 @@ A comprehensive React.js prototype for secure degree verification with three dis
 
 ## 🌐 Live Demo
 
-**🚀 Live Application:** [Open Live]([https://paranjaysoni.github.io/authx-prototype](https://paranjaysoni.github.io/AuthX-Authenticity_Validator_for_Academia/))
+**🚀 Live Application:** [Open Live](https://paranjaysoni.github.io/AuthX-Authenticity_Validator_for_Academia/](https://paranjaysoni.github.io/AuthX-Authenticity_Validator_for_Academia/))
 
 **📂 Source Code:** [GitHub Repository](https://github.com/paranjaysoni/AuthX-Authenticity_Validator_for_Academia.git)
 
